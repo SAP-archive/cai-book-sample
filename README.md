@@ -3,7 +3,7 @@ Endpoint used in the SAP Conversational AI eBite book from SAP Press. The sample
 
 
 # Requirements
-CF account active in your SAP Cloud Platform Trial
+CF account active in your SAP Cloud Platform Trial. For more information check this [YouTube video](http://bit.ly/2EsGUNX).
 
 # Installation
 1. Retrieve the git repository Web URL
