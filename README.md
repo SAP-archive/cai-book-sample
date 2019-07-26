@@ -13,7 +13,7 @@ CF account active in your SAP Cloud Platform Trial. For more information check t
 1. Right click on the nodejs module click Run as a nodeJS application
 
 # Check Installation
-* https://<YOUR ROUTE>-nodejs.cfapps.eu10.hana.ondemand.com/planets/test/\
+* https://<<YOUR ROUTE>>-nodejs.cfapps.eu10.hana.ondemand.com/planets/test/\
 Expected output *Greetings from the Test controller!*
 
 # How to obtain support
