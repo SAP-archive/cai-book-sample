@@ -6,8 +6,8 @@ Endpoint used in the SAP Conversational AI eBite book from SAP Press. The sample
 CF account active in your SAP Cloud Platform Trial
 
 # Installation
-1. Connect to the git repository and retrieve the git URL
-1. Open WebIDE and right click on workspace -> Git -> Clone repository
+1. Retrieve the git repository Web URL
+1. Open WebIDE and right click on workspace -> Git -> Clone repository (alternatively you can export the Git repo as a zip file and import in WebIDE)
 1. Use the SolarSystem folder name
 1. Right click on the db module and click build
 1. Right click on the nodejs module and click build
