@@ -8,7 +8,6 @@ CF account active in your SAP Cloud Platform Trial. For more information check t
 1. Retrieve the git repository Web URL
 1. Open WebIDE and right click on workspace -> Git -> Clone repository (alternatively you can export the Git repo as a zip file and import in WebIDE)
 1. Verify that your folder project name is *SolarSystem*
-1. Use the SolarSystem folder name
 1. Right click on the db module and click build
 1. Right click on the nodejs module and click build
 1. Right click on the nodejs module click Run as a nodeJS application
