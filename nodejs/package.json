@@ -1,26 +1,18 @@
 {
 	"dependencies": {
-		"@sap/approuter": "2.7.1",
+		"@sap/hana-client": "*",
 		"express": "*",
-		"body-parser": "*",
-		"mongodb": "*",
-		"assert": "*",
-		"mongoose": "*"
+		"body-parser": "*"
 	},
-	"description": "my description",
-	"devDependencies": {
-		"@sap/grunt-sapui5module-bestpractice-build": "^0.0.14",
-		"express": "*"
-	},
+	"devDependencies": {},
 	"files": [],
 	"main": "index.js",
 	"name": "nodejs",
 	"scripts": {
-		"start": "node index.js",
-		"test": "node testrun.js"
+		"start": "node index.js"
 	},
 	"engines": {
-		"node": "8.x"
+		"node": "11.x"
 	},
 	"version": "1.0.0"
 }

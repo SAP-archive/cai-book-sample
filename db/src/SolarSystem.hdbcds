@@ -1,0 +1,17 @@
+namespace SolarSystem.db;
+
+context SolarSystem {
+
+    /*@@layout{"layoutInfo":{"x":-192,"y":-39.5}}*/
+    entity Planet {
+        key PlanetRaw        : String(100)    not null;
+            Planet           : String(100)    not null;
+            Position         : Integer        not null;
+            ShortDescription : String(500)    not null;
+            Wikipedia        : String(100)    not null;
+            Image            : String(200)    not null;
+            Mass             : Decimal(10, 2) not null;
+            Diameter         : Decimal(10, 2) not null;
+            DistanceFromSun  : Decimal(10, 2) not null;
+    };
+};

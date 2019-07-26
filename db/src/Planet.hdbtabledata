@@ -1,0 +1,37 @@
+{
+
+	"format_version": 1,
+
+	"imports":
+
+		[{
+
+			"target_table": "SolarSystem.db::SolarSystem.Planet",
+
+			"source_data": {
+				"data_type": "CSV",
+				"file_name": "SolarSystem.db::Planet.csv",
+				"has_header": true
+			},
+
+			"import_settings": {
+				"import_columns": ["PlanetRaw", "Planet", "Position", "ShortDescription", "Wikipedia", "Image", "Mass", "Diameter", "DistanceFromSun" ]
+			},
+
+			"column_mappings": {
+				"PlanetRaw": 1,
+				"Planet": 2,
+				"Position": 3,
+				"ShortDescription": 4,
+				"Wikipedia": 5,
+				"Image": 6,
+				"Mass": 7,
+				"Diameter": 8,
+				"DistanceFromSun": 9
+			}
+
+		}
+
+	]
+
+}

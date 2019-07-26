@@ -28,7 +28,12 @@ modules:
         properties:
           url: '${default-url}'
     requires:
-      - name: SolarSystem_mongodb
+      - name: hdi_db
+  - name: db
+    type: hdb
+    path: db
+    requires:
+      - name: hdi_db
 resources:
   - name: SolarSystem_html5_repo_runtime
     parameters:
@@ -40,8 +45,10 @@ resources:
       service-plan: app-host
       service: html5-apps-repo
     type: org.cloudfoundry.managed-service
-  - name: SolarSystem_mongodb
+  - name: hdi_db
     parameters:
-      service-plan: v4.0-dev
-      service: mongodb
-    type: org.cloudfoundry.managed-service
+      config:
+        schema: SolarSystem
+    properties:
+      hdi-container-name: '${service-name}'
+    type: com.sap.xs.hdi-container

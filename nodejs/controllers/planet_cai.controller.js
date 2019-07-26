@@ -1,4 +1,17 @@
-var Planet = require('../models/planet.model.js');
+connectDB = function () {
+	// Set up hana connection
+	var hana = require('@sap/hana-client');
+	if (process.env.VCAP_SERVICES) {
+		var vcap_services = process.env.VCAP_SERVICES;
+		var hana_service = JSON.parse(vcap_services).hanatrial[0];
+		hanaDBUrl = "serverNode=" + hana_service.credentials.host + ":" + hana_service.credentials.port + ";uid=" + hana_service.credentials.user +
+			";pwd=" + hana_service.credentials.password + ";currentschema=" + hana_service.credentials.schema + "";
+	}
+
+	var client = hana.createConnection();
+	client.connect(hanaDBUrl);
+	return client;
+}
 
 //Simple version, without validation or sanitation
 exports.test = function (req, res) {
@@ -6,66 +19,68 @@ exports.test = function (req, res) {
 };
 
 exports.planet_details = function (req, res) {
-	Planet.findOne({
-		'PlanetRaw': req.params.id
-	}, function (err, planet) {
-		if (err || !planet) return errorMessage(res,err);
+	var client = connectDB();
+	var sql = "SELECT \"ShortDescription\" FROM \"SolarSystem.db::SolarSystem.Planet\" WHERE \"PlanetRaw\" = '" + req.params.id + "'";
+	client.exec(sql, (err, planet) => {
+		client.disconnect();
+
+		if (err) {
+			return errorMessage(res, err);
+		}
 		res.send({
 			replies: [{
 				type: 'text',
-				content: planet.ShortDescription,
+				content: planet[0].ShortDescription,
 			}],
 			conversation: {}
 		});
-	})
+	});
 };
 
 exports.planet_attribute = function (req, res) {
-	var fields = "Planet " + req.params.attribute;
 	var uom = {
-		"Position": "",
-		"Mass": "10^24kg",
-		"Diameter": "Km",
-		"Density": "kg/m^3",
-		"Gravity": "m/s^2",
-		"EscapeVelocity": "km/s",
-		"RotationPeriod": "hours",
-		"LengthOfDay": "hours",
-		"DistanceFromSun": "10^6 km",
-		"Perihelion": "10^6 km",
-		"Aphelion": "10^6 km",
-		"OrbitalPeriod": "days",
-		"OrbitalVelocity": "km/s",
-		"OrbitalInclination": "degrees",
-		"OrbitalEccentricity": "",
-		"ObliquityToOrbit": "degrees",
-		"MeanTemperature": "C",
-		"SurfacePressure": "bars",
-		"NumberOfMoons": "",
-		"RingSystem": "",
-		"GlobalMagneticField": ""
+		"Position": {
+			"uom":"",
+			"string":"Position"},
+		"Mass": {
+			"uom":"10^24kg", 
+			"string":"Mass"},
+		"Diameter": {
+			"uom":"10^6 km",
+			"string":"Diameter"},
+		"DistanceFromSun": {
+			"uom":"10^6 km",
+			"string":"Distance from the Sun"}
 	};
-	Planet.findOne({
-			'PlanetRaw': req.params.id
-		},
-		fields,
-		function (err, planet) {
-			if (err || !planet) return errorMessage(res,err);
-			const response = planet.Planet + ' ' + req.params.attribute + ' is ' + planet[req.params.attribute] + ' ' + uom[req.params
-				.attribute];
-			res.send({
-				replies: [{
-					type: 'text',
-					content: response
-				}],
-				conversation: {}
-			});
-		})
+	var client = connectDB();
+	var sql = "SELECT \"Planet\", \"ShortDescription\", \"" + req.params.attribute +
+		"\" as \"attribute\" FROM \"SolarSystem.db::SolarSystem.Planet\" WHERE \"PlanetRaw\" = '" + req.params.id + "'";
+	client.exec(sql, (err, planet) => {
+		client.disconnect();
+
+		if (err) {
+			return errorMessage(res, err);
+		}
+		const response = planet[0].Planet + ' ' + uom[req.params.attribute].string + ' is ' + planet[0].attribute + ' ' + uom[req.params.attribute].uom;
+		res.send({
+			replies: [{
+				type: 'text',
+				content: response,
+			}],
+			conversation: {}
+		});
+	});
 };
 
 exports.planets_details = function (req, res) {
-	Planet.find({}, function (err, planets) {
-		if (err || !planets) return errorMessage(res,err);
+	var client = connectDB();
+	var sql = 'SELECT \"PlanetRaw\", \"Planet\", \"Position\", \"Image\", \"Wikipedia\" FROM "SolarSystem.db::SolarSystem.Planet"';
+	client.exec(sql, (err, planets) => {
+		client.disconnect();
+
+		if (err) {
+			return errorMessage(res, err);
+		}
 		const cards = planets.slice().map(e => ({
 			title: e.Planet,
 			subtitle: `Position ${e.Position}`,
@@ -74,7 +89,7 @@ exports.planets_details = function (req, res) {
 				type: 'postback',
 				value: `Tell me more about ${e.PlanetRaw}`,
 				title: 'Tell me more',
-			},{
+			}, {
 				type: 'web_url',
 				value: e.Wikipedia,
 				title: 'Wikipedia',
@@ -91,10 +106,11 @@ exports.planets_details = function (req, res) {
 			}],
 			conversation: {}
 		});
-	})
+	});
 };
 
-errorMessage = function (res,err) {
+errorMessage = function (res, err) {
+	console.error('SQL execute error:', err);
 	res.send({
 		replies: [{
 			type: 'text',

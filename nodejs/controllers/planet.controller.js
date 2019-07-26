@@ -1,63 +1,51 @@
-var Planet = require('../models/planet.model.js');
+connectDB = function () {
+	// Set up hana connection
+	var hana = require('@sap/hana-client');
+	if (process.env.VCAP_SERVICES) {
+		var vcap_services = process.env.VCAP_SERVICES;
+		var hana_service = JSON.parse(vcap_services).hanatrial[0];
+		hanaDBUrl = "serverNode=" + hana_service.credentials.host + ":" + hana_service.credentials.port + ";uid=" + hana_service.credentials.user +
+			";pwd=" + hana_service.credentials.password + ";currentschema=" + hana_service.credentials.schema + "";
+	}
+
+	var client = hana.createConnection();
+	client.connect(hanaDBUrl);
+	return client;
+}
 
 //Simple version, without validation or sanitation
 exports.test = function (req, res) {
 	res.send('Greetings from the Test controller!');
 };
 
-exports.planet_create = function (req, res) {
-	Planet.insertOne(req.body, function (err, planet) {
-		if (err) return next(err);
-		res.send(planet);
-	})
-};
-
-exports.planets_create = function (req, res, next) {
-	Planet.insertMany(req.body, function (err, planet) {
-		if (err) return next(err);
-		res.send(planet);
-	})
-};
-
 exports.planet_details = function (req, res, next) {
-	Planet.findOne({'PlanetRaw': req.params.id}, function (err, planet) {
-		if (err) return next(err);
+	var client = connectDB();
+	var sql = "SELECT * FROM \"SolarSystem.db::SolarSystem.Planet\" WHERE \"PlanetRaw\" = '" + req.params.id + "'";
+	console.log("SQL:", sql);
+	client.exec(sql, (err, planet) => {
+		client.disconnect();
+
+		if (err) {
+			return console.error('SQL execute error:', err);
+		}
 		res.send(planet);
-	})
+		console.log("Results:", planet);
+	});
 };
 
 exports.planets_details = function (req, res, next) {
-	Planet.find({}, function (err, planets) {
-		if (err) return next(err);
+	var client = connectDB();
+	var sql = 'SELECT * FROM "SolarSystem.db::SolarSystem.Planet"';
+	client.exec(sql, (err, planets) => {
+		client.disconnect();
+
+		if (err) {
+			return console.error('SQL execute error:', err);
+		}
 		var planetMap = {};
-
 		planets.forEach(function (planet) {
-			planetMap[planet._id] = planet;
+			planetMap[planet.PlanetRaw] = planet;
 		});
-
 		res.send(planetMap);
 	});
-};
-
-exports.planet_update = function (req, res, next) {
-	Planet.findByIdAndUpdate(req.params.id, {
-		$set: req.body
-	}, function (err, planet) {
-		if (err) return next(err);
-		res.send('Planet udpated.');
-	});
-};
-
-exports.planet_delete = function (req, res, next) {
-	Planet.findByIdAndRemove(req.params.id, function (err) {
-		if (err) return next(err);
-		res.send('Deleted successfully!');
-	})
-};
-
-exports.planets_delete = function (req, res, next) {
-	Planet.deleteMany(function (err) {
-		if (err) return next(err);
-		res.send('Deleted successfully!');
-	})
 };
