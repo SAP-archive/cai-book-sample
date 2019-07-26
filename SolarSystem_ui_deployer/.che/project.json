@@ -1,0 +1,1 @@
+{"type":"com.sap.html5.application-content","builders":{"default":"sap.nodejs","configs":{}},"runners":{"configs":{}},"attributes":{"sap.watt.common.setting":["{\"projectType\":[\"com.sap.html5.application-content\"]}"]},"description":"SolarSystem_ui_deployer","mixinTypes":["mtamodule"]}

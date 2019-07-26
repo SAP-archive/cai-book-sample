@@ -1,0 +1,47 @@
+ID: SolarSystem
+_schema-version: '2.1'
+description: Solar System Data
+parameters:
+  deploy_mode: html5-repo
+version: 0.0.1
+modules:
+  - name: SolarSystem_appRouter
+    type: approuter.nodejs
+    path: SolarSystem_appRouter
+    parameters:
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: SolarSystem_html5_repo_runtime
+  - name: SolarSystem_ui_deployer
+    type: com.sap.html5.application-content
+    path: SolarSystem_ui_deployer
+    requires:
+      - name: SolarSystem_html5_repo_host
+  - name: nodejs
+    type: nodejs
+    path: nodejs
+    parameters:
+      memory: 200M
+    provides:
+      - name: nodejs_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: SolarSystem_mongodb
+resources:
+  - name: SolarSystem_html5_repo_runtime
+    parameters:
+      service-plan: app-runtime
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+  - name: SolarSystem_html5_repo_host
+    parameters:
+      service-plan: app-host
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+  - name: SolarSystem_mongodb
+    parameters:
+      service-plan: v4.0-dev
+      service: mongodb
+    type: org.cloudfoundry.managed-service
