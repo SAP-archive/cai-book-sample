@@ -21,7 +21,6 @@ exports.test = function (req, res) {
 exports.planet_details = function (req, res, next) {
 	var client = connectDB();
 	var sql = "SELECT * FROM \"SolarSystem.db::SolarSystem.Planet\" WHERE \"PlanetRaw\" = '" + req.params.id + "'";
-	console.log("SQL:", sql);
 	client.exec(sql, (err, planet) => {
 		client.disconnect();
 
@@ -29,7 +28,6 @@ exports.planet_details = function (req, res, next) {
 			return console.error('SQL execute error:', err);
 		}
 		res.send(planet);
-		console.log("Results:", planet);
 	});
 };
 
