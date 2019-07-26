@@ -1,5 +1,6 @@
 # SAP Conversational AI for Chatbot Development
 Endpoint used in the SAP Conversational AI eBite book from SAP Press. The sample code provides an example for the implementation of the Bot Logic component using HANA DB and NodeJS.
+**Note** This is code is just for demo and training purpose, it is not intended for productive usage
 
 # Requirements
 CF account active in your SAP Cloud Platform Trial. For more information check this [YouTube video](http://bit.ly/2EsGUNX).
