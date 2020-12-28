@@ -1,3 +1,8 @@
+![](https://img.shields.io/badge/STATUS-NOT%20CURRENTLY%20MAINTAINED-red.svg?longCache=true&style=flat)
+
+# Important Notice
+This public repository is read-only and no longer maintained.
+
 # SAP Conversational AI for Chatbot Development
 Endpoint used in the SAP Conversational AI E-Bite book from SAP PRESS. The sample code provides an example for the implementation of the Bot Logic component using HANA DB and NodeJS.
 
